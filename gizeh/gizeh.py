@@ -473,6 +473,19 @@ def polyline(points, close_path=False, **kw):
     return shape_element(draw, **kw)
 
 
+def arrow(p0, p1, w=1.0, hw=6.0, hl=20.0, **kw):
+
+    a = np.array(p0)
+    b = np.array(p1)
+    n = (b - a)/np.linalg.norm(b - a)
+    print(n)
+    t = np.array((-n[1], n[0]))
+    pts = np.array([a + w*t, b + w*t - hl*n, b + hw*t - hl*n, b,
+                    b - hw*t - hl*n, b - w*t - hl*n, a - w*t])
+
+    return polyline(pts, close_path=True, **kw)
+
+
 def regular_polygon(r, n, **kw):
     points = [polar2cart(r, a) for a in np.linspace(0, 2 * np.pi, n + 1)[:-1]]
     return polyline(points, close_path=True, **kw)
