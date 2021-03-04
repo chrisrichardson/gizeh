@@ -3,7 +3,7 @@ import moviepy.editor as mpy
 import numpy as np
 from PIL import Image
 
-W, H = 1200, 800
+W, H = 600, 480
 
 # with open("Isaac_Newton_signature.svg", "r") as f:
 with open("Robert_Hooke_Signature.svg", "r") as f:
@@ -13,27 +13,28 @@ s = gz.SVGElement(svg)
 im = Image.open("paper_background2.jpg").resize((W, H))
 im = np.array(im)
 
-def make_arrow(x0, y0, x1, y1, **kw):
+def make_arrow(x0, x1, w=0.01, hw=0.05, hl=0.1, **kw):
 
-    # parameters
-    w = 0.01
-    hw = 0.1
-    hl = 0.2
-
-    a = np.array([x0, y0])
-    b = np.array([x1, y1])
+    a = np.array(x0)
+    b = np.array(x1)
     n = (b - a)
     t = np.array((-n[1], n[0]))
-    pts = np.array([a + w*t, b + w*t, b + hw*t, b + hl*n,
-                    b - hw*t, b - w*t, a - w*t])
+    pts = np.array([a + w*t, b + w*t - hl*n, b + hw*t - hl*n, b,
+                    b - hw*t - hl*n, b - w*t - hl*n, a - w*t])
 
     return gz.polyline(pts, close_path=True, **kw)
 
 def make_frame1(t):
     surface = gz.Surface.from_image(im) # (W, H, bg_color=(1, 1, 1))
 
-    arr = make_arrow(30,30,100,100, fill=(0,0,0))
-    arr.draw(surface)
+    b = 200
+    th = 0.0
+    for i in range(20):
+        x0 = [b + b * np.cos(th), b + b * np.sin(th)]
+        th += 2.0*np.pi/20
+        x1 = [b + b * np.cos(th), b + b * np.sin(th)]
+        arr = make_arrow(x0, x1, hl=0.25, fill=(0,0,0), stroke_width=0)
+        arr.draw(surface)
 
     p = s.translate((250, 250)).scale(0.1*t+1.0)
     p.fill = (0.0,0.0,0.0, t*t)
