@@ -4,5 +4,6 @@
 
 from .gizeh import *
 from .geometry import *
+from .tex import *
 
 from .version import __version__

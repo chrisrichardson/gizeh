@@ -7,11 +7,11 @@ http://en.wikipedia.org/wiki/Rose_mathematics
 
 import gizeh as gz
 import numpy as np
-from fractions import gcd
+from math import gcd
 
 def rose(d, n):
     """ Returns a polyline representing a rose of radius 1 """
-    n_cycles = 1.0 * d / gcd(n,d) # <- number of cycles to close the rose 
+    n_cycles = 1.0 * d / gcd(n,d) # <- number of cycles to close the rose
     aa = np.linspace(0,2*np.pi*n_cycles,1000)
     rr = np.cos( n*aa/d)
     points = gz.polar2cart(rr, aa)
@@ -25,7 +25,7 @@ def position(d, n):
     """ Defines the (x,y) position of the rose(d,n)."""
     return [(1.1*(2*i-.6) * rose_radius) for i in [d, n]]
 
-W, H = [int(c+2*rose_radius) for c in position(max_d,max_n)] 
+W, H = [int(c+2*rose_radius) for c in position(max_d,max_n)]
 
 surface = gz.Surface(W, H, bg_color=(1, 1, 1))
 

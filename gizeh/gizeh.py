@@ -47,7 +47,7 @@ class Surface:
             image = np.array(3 * [image])
         elif d == 3:
             image = image[:, :, [2, 1, 0]]
-            image = np.dstack([image, 255 * np.ones((h, w))])
+            image = np.dstack([image, 255 * np.ones((h, w), dtype='uint8')])
         sf = Surface(w, h)
         arr = np.frombuffer(sf._cairo_surface.get_data(), np.uint8)
         arr += image.flatten()
@@ -145,8 +145,8 @@ class Element:
     scaled) and drawn to a Surface.
 
     Parameter `draw_method` is a function which takes a cairo.Surface.Context()
-    as argument and draws on this context. All Elements are draw on a different
-    context.
+    as argument and draws on this context. All Elements are drawn on a
+    different context.
     """
 
     def __init__(self, draw_method):
@@ -236,7 +236,6 @@ class Group(Element):
 
         for e in self.elements:
             m = self.matrix
-            mi = np.linalg.inv(m)
             new_matrix = m.dot(e.matrix)
             e.set_matrix(new_matrix).draw(surface)
 
@@ -394,7 +393,7 @@ def shape_element(draw_contour, xy=(0, 0), angle=0, fill=None, stroke=(0, 0, 0),
       are rotated around their center.
 
     fill
-      Defines wath will fill the element. Default is None (no fill). `fill` can
+      Defines what will fill the element. Default is None (no fill). `fill` can
       be one of the following:
       - A (r,g,b) color tuple, where 0 =< r,g,b =< 1
       - A (r,g,b, a) color tuple, where 0=< r,g,b,a =< 1 (a defines the
